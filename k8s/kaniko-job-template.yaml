@@ -1,22 +1,24 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: kaniko-build-{{USER}}-{{ID}}
+  name: kaniko-build-nivesh-001
   namespace: backend
 spec:
   backoffLimit: 0
   template:
+    metadata:
+      labels:
+        job: kaniko-build-nivesh-001
     spec:
       restartPolicy: Never
       containers:
         - name: kaniko
           image: gcr.io/kaniko-project/executor:latest
           args:
-  - "--context=git://github.com/nickthelegend/backend-kubernetes.git#refs/heads/main"
-  - "--dockerfile=/workspace/Dockerfile"
-  - "--destination=registry.digitalocean.com/orca-registry/backend:v1.0"
-  - "--verbosity=info"
-
+            - "--context=git://github.com/nickthelegend/backend-kubernetes.git#refs/heads/main"
+            - "--dockerfile=/workspace/Dockerfile"
+            - "--destination=registry.digitalocean.com/orca-registry/backend:v1.0"
+            - "--verbosity=info"
           volumeMounts:
             - name: docker-config
               mountPath: /kaniko/.docker/
