@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kaniko-build-{{USER}}-{{ID}}
+  namespace: backend
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: kaniko
+          image: gcr.io/kaniko-project/executor:latest
+          args:
+            - "--context={{CONTEXT_URL}}"
+            - "--dockerfile={{DOCKERFILE_PATH}}"
+            - "--destination={{DESTINATION}}"
+            - "--verbosity=info"
+          volumeMounts:
+            - name: docker-config
+              mountPath: /kaniko/.docker/
+              readOnly: true
+      volumes:
+        - name: docker-config
+          secret:
+            secretName: regcred

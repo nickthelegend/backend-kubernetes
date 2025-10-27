@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backend-sa
+  namespace: backend
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: backend-controller-role
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces","services","secrets","pods"]
+    verbs: ["get","list","watch","create","update","patch","delete"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["create","get","list","watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["create","get","patch","list"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["create","get","patch","list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: backend-controller-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: backend-controller-role
+subjects:
+  - kind: ServiceAccount
+    name: backend-sa
+    namespace: backend

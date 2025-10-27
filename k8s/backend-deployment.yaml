@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels: { app: backend }
+    spec:
+      serviceAccountName: backend-sa
+      containers:
+        - name: backend
+          image: registry.digitalocean.com/orca-registry/backend:latest   # update tag
+          ports: [{ containerPort: 8080 }]
+          env:
+            - name: BASE_DOMAIN
+              value: "0rca.fun"
+            - name: REGISTRY
+              value: "registry.digitalocean.com"
+            - name: REGISTRY_NAMESPACE
+              value: "orca-registry"
+            - name: KANIKO_NAMESPACE
+              value: "backend"
+          resources:
+            requests: { cpu: "100m", memory: "128Mi" }
+            limits: { cpu: "500m", memory: "512Mi" }
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  namespace: backend
+spec:
+  selector: { app: backend }
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
