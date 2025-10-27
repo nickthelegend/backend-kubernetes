@@ -12,10 +12,11 @@ spec:
         - name: kaniko
           image: gcr.io/kaniko-project/executor:latest
           args:
-            - "--context={{CONTEXT_URL}}"
-            - "--dockerfile={{DOCKERFILE_PATH}}"
-            - "--destination={{DESTINATION}}"
-            - "--verbosity=info"
+  - "--context=git://github.com/nickthelegend/backend-kubernetes.git#refs/heads/main"
+  - "--dockerfile=/workspace/Dockerfile"
+  - "--destination=registry.digitalocean.com/orca-registry/backend:v1.0"
+  - "--verbosity=info"
+
           volumeMounts:
             - name: docker-config
               mountPath: /kaniko/.docker/
