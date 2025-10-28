@@ -12,10 +12,18 @@ spec:
         - name: kaniko
           image: gcr.io/kaniko-project/executor:latest
           args:
-            - "--context=git://github.com/nickthelegend/backend-kubernetes.git"
+            # Replace with your repo
+            - "--context=git://github.com/nickthelegend/backend-kubernetes.git#refs/heads/main"
+
+            # If your Dockerfile is in root of repo
             - "--dockerfile=Dockerfile"
-            - "--destination=registry.digitalocean.com/orca-registry/backend:latest"
-            - "--verbosity=info"
+
+            # Change this to your registry path
+            - "--destination=registry.digitalocean.com/orcanet/backend-kubernetes:v1.0"
+
+            # Optional (more detailed logs)
+            - "--verbosity=debug"
+
           volumeMounts:
             - name: docker-config
               mountPath: /kaniko/.docker/
