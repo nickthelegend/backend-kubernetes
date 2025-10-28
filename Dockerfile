@@ -1,7 +1,6 @@
 FROM node:18-alpine
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci
 COPY . .
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s CMD wget --quiet --spider http://localhost:8080/healthz || exit 1
